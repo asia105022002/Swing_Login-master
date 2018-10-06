@@ -9,7 +9,6 @@ public class Login extends JFrame {
         login.setVisible(true);
     }
 
-    private boolean isKeyBoardOpen= false;
     private PWKeyBoard kb;
     private JPanel P1=new JPanel(new GridLayout(2,2,3,3));
     private JPanel P2=new JPanel(new GridLayout(1,3,3,3));
@@ -55,7 +54,8 @@ public class Login extends JFrame {
                     MainFrame main=new MainFrame();
                     main.setVisible(true);
                     Login.this.dispose();
-                    kb.dispose();
+                    if(kb!=null)
+                        kb.dispose();
                 }
                 else {
                     JOptionPane.showMessageDialog(Login.this, "error");

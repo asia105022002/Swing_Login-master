@@ -13,6 +13,7 @@ public class MainFrame extends JFrame {
     JMenuItem save=new JMenuItem("Save");
     JMenuItem exit=new JMenuItem("Exit");
     JMenuItem gogame=new JMenuItem("井字遊戲");
+    JMenuItem Encrypt=new JMenuItem("加密工具");
 
 
     public static void main(String[] args) {
@@ -37,6 +38,7 @@ public class MainFrame extends JFrame {
         file.add(save);
         file.add(exit);
         game.add(gogame);
+        tools.add(Encrypt);
 
 
         exit.addActionListener(new ActionListener() {
@@ -46,20 +48,20 @@ public class MainFrame extends JFrame {
             }
         });
 
-//        gogame.addActionListener(new ActionListener() {
-//            @Override
-//            public void actionPerformed(ActionEvent e) {
-//                GoGame goGame=new GoGame(MainFrame.this);
-//                goGame.setVisible(true);
-//                setVisible(false);
-//            }
-//        });
-
         gogame.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 GoGame goGame=new GoGame(MainFrame.this);
                 goGame.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        Encrypt.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Encrypt encrypt=new Encrypt(MainFrame.this);
+                encrypt.setVisible(true);
                 setVisible(false);
             }
         });
