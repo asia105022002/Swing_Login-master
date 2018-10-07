@@ -39,7 +39,7 @@ public class Encrypt extends JFrame {
 
     private void init() {
         this.setTitle("加密");
-        this.setBounds(100, 100, 400, 300);
+        this.setBounds(100, 100, 800, 600);
         //this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -54,17 +54,19 @@ public class Encrypt extends JFrame {
         });
         container.setBorder(new EmptyBorder(3, 3, 3, 3));
         setContentPane(container);
-        container.setLayout(new GridLayout(1,3,3,3));
+        container.setLayout(new BorderLayout(3, 3));
         JScrollPane scrollPaneWest = new JScrollPane();
-        container.add(scrollPaneWest);
+        scrollPaneWest.setPreferredSize(new Dimension(350, 0));
+        container.add(scrollPaneWest,BorderLayout.WEST);
         scrollPaneWest.setViewportView(textAreaWest);
         textAreaWest.setLineWrap(true);
         textAreaWest.setWrapStyleWord(true);
 
         JPanel CenterLayout = new JPanel();
-        CenterLayout.setSize(new Dimension(100,300));
+//        CenterLayout.setPreferredSize(new Dimension(600, 600));
+//        CenterLayout.setMinimumSize(new Dimension(600, 600));無效
         CenterLayout.setLayout(new GridLayout(9,1,3,3));
-        container.add(CenterLayout);
+        container.add(CenterLayout,BorderLayout.CENTER);
 
         JLabel LMathod=new JLabel("Mathod");
         CenterLayout.add(LMathod);
@@ -91,7 +93,9 @@ public class Encrypt extends JFrame {
         rdbtn.add(rdbtnDecrypt);
 
         JScrollPane scrollPaneEast = new JScrollPane();
-        container.add(scrollPaneEast);
+        //scrollPaneEast.setMaximumSize(new Dimension(600, 0));無效
+        scrollPaneEast.setPreferredSize(new Dimension(350, 0));
+        container.add(scrollPaneEast,BorderLayout.EAST);
         scrollPaneEast.setViewportView(textAreaEast);
         textAreaEast.setLineWrap(true);
         textAreaEast.setWrapStyleWord(true);
@@ -116,7 +120,11 @@ public class Encrypt extends JFrame {
 
                 String LeftTextArea=textAreaWest.getText();
                 System.out.println("Plain:\n"+LeftTextArea);
+
+                System.out.println("寬:"+getWidth());
+                System.out.println("高:"+getHeight());
                 //以上測試用
+                EncryptMode=rdbtn.getSelection().getActionCommand().equals("encrypt");
                 int EncryptionType =comboBox.getSelectedIndex();
                 switch(EncryptionType) {
                     case 0:
@@ -196,7 +204,6 @@ public class Encrypt extends JFrame {
                 SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
                 SecretKey securekey = keyFactory.generateSecret(desKey);
                 Cipher cipher = Cipher.getInstance("DES");
-                EncryptMode=rdbtn.getSelection().getActionCommand().equals("encrypt");
                 cipher.init(EncryptMode?Cipher.ENCRYPT_MODE:Cipher.DECRYPT_MODE, securekey, random);
                 if(EncryptMode) {
                     byte[] Temp = cipher.doFinal(textAreaWest.getText().getBytes());
