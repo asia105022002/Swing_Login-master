@@ -104,7 +104,6 @@ public class Encrypt extends JFrame {
     }
 
     private void  initListener(){
-
         btnRun.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -137,7 +136,7 @@ public class Encrypt extends JFrame {
                         System.out.println("Unfinished");
                         break;
                     case 3:
-                        System.out.println("Unfinished");
+                        Caesar();
                         break;
                 }
 
@@ -218,6 +217,30 @@ public class Encrypt extends JFrame {
                 JOptionPane.showMessageDialog(Encrypt.this, "解密失敗");
                 //exception.printStackTrace();
             }
+        }
+    }
+
+    private void Caesar(){
+        try{
+            int key=Integer.parseInt(new String(pw.getPassword()));
+            if(key>=26||key<=-26)
+                key%=26;
+            if(!EncryptMode)
+                key=-key;
+            StringBuilder content =new StringBuilder(textAreaWest.getText());
+            for(int c=0;c<content.length();c++) {
+                char t=content.charAt(c);
+                if(Character.isLetter(t)&&t<=126) {
+                    int temp=(t-(t<='Z'?'A':'a')+key)%26;
+                    temp=temp<0?temp+26:temp;
+                    content.setCharAt(c,(char)(temp+(t<='Z'?'A':'a')));
+                }
+            }
+            textAreaEast.setText(content.toString());
+        }
+        catch (Exception e)
+        {
+            JOptionPane.showMessageDialog(Encrypt.this, "Caesar密碼系統金鑰為0~25之整數");
         }
     }
 
