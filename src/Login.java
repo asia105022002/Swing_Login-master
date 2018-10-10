@@ -42,8 +42,10 @@ public class Login extends JFrame {
                     kb=new PWKeyBoard(Login.this,getX()-250,getY());
                     kb.setVisible(true);
                 }
-                else
+                else {
+                    kb.setLocation(getX()-250,getY());
                     kb.setVisible(true);
+                }
             }
         });
         Login.addActionListener(new AbstractAction() {
