@@ -8,7 +8,12 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.security.SecureRandom;
+import java.util.ArrayList;
 
 public class Encrypt extends JFrame {
 
@@ -22,6 +27,9 @@ public class Encrypt extends JFrame {
     private JButton btnRun;
     private JButton btnClose;
     private boolean EncryptMode=true;
+    private JMenuItem save;
+    private JMenuItem open;
+    private JMenuItem exit;
 
     public static void main(String[] args) {
         Encrypt encrypt=new Encrypt();
@@ -40,6 +48,21 @@ public class Encrypt extends JFrame {
     private void init() {
         this.setTitle("加密");
         this.setBounds(100, 100, 800, 600);
+
+        JMenuBar menuBar=new JMenuBar();
+        this.setJMenuBar(menuBar);
+        JMenu file=new JMenu("File");
+        JMenu about=new JMenu("About");
+        open = new JMenuItem("Open");
+        save = new JMenuItem("Save");
+        exit = new JMenuItem("Exit");
+
+        menuBar.add(file);
+        menuBar.add(about);
+        file.add(open);
+        file.add(save);
+        file.add(exit);
+
         //this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -107,39 +130,45 @@ public class Encrypt extends JFrame {
         btnRun.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String rdbtnSelect = rdbtn.getSelection().getActionCommand();
-                System.out.println("radio button:"+rdbtnSelect);
-
-                int comboBoxSelectedIndex =comboBox.getSelectedIndex();
-                String comboBoxSelect=(String)comboBox.getSelectedItem();
-                System.out.println("combo box select:"+comboBoxSelect+", index:"+comboBoxSelectedIndex);
-
-                String Pass=new String(pw.getPassword());
-                System.out.println("pw:"+Pass);
-
-                String LeftTextArea=textAreaWest.getText();
-                System.out.println("Plain:\n"+LeftTextArea);
-
-                System.out.println("寬:"+getWidth());
-                System.out.println("高:"+getHeight());
+//                String rdbtnSelect = rdbtn.getSelection().getActionCommand();
+//                System.out.println("radio button:"+rdbtnSelect);
+//
+//                int comboBoxSelectedIndex =comboBox.getSelectedIndex();
+//                String comboBoxSelect=(String)comboBox.getSelectedItem();
+//                System.out.println("combo box select:"+comboBoxSelect+", index:"+comboBoxSelectedIndex);
+//
+//                String Pass=new String(pw.getPassword());
+//                System.out.println("pw:"+Pass);
+//
+//                String LeftTextArea=textAreaWest.getText();
+//                System.out.println("Plain:\n"+LeftTextArea);
+//
+//                System.out.println("寬:"+getWidth());
+//                System.out.println("高:"+getHeight());
                 //以上測試用
                 EncryptMode=rdbtn.getSelection().getActionCommand().equals("encrypt");
                 int EncryptionType =comboBox.getSelectedIndex();
-                switch(EncryptionType) {
-                    case 0:
-                        DES();
-                        break;
-                    case 1:
-                        System.out.println("Unfinished");
-                        break;
-                    case 2:
-                        System.out.println("Unfinished");
-                        break;
-                    case 3:
-                        Caesar();
-                        break;
-                }
 
+                if(EncryptMode&&textAreaWest.getText().equals(""))
+                    JOptionPane.showMessageDialog(Encrypt.this, "明文為空");
+                else if(!EncryptMode&&textAreaEast.getText().equals(""))
+                    JOptionPane.showMessageDialog(Encrypt.this, "密文為空");
+                else {
+                    switch(EncryptionType) {
+                        case 0:
+                            DES();
+                            break;
+                        case 1:
+                            System.out.println("Unfinished");
+                            break;
+                        case 2:
+                            System.out.println("Unfinished");
+                            break;
+                        case 3:
+                            Caesar();
+                            break;
+                    }
+                }
             }
         });
 
@@ -155,6 +184,32 @@ public class Encrypt extends JFrame {
                 }
             }
         });
+
+        open.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser =new JFileChooser();
+                if(fileChooser.showOpenDialog(Encrypt.this)==JFileChooser.APPROVE_OPTION) {
+                    try {
+                        FileReader fileReader=new FileReader(fileChooser.getSelectedFile());
+                        BufferedReader br = new BufferedReader(fileReader);
+                        ArrayList<String> List = new ArrayList<String>();
+                        String line;//br.readLine()讀取txt的每一行資料,讀到的資料存到line
+                        while((line=br.readLine())!=null) {
+                            textAreaWest.append(line);
+                            List.add(line);
+                        }
+                        fileReader.close();
+                    } catch (FileNotFoundException e1) {
+                        e1.printStackTrace();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+
+            }
+        });
+
     }
 
     private String byte2Hex(byte[] arg_bteArray) {
@@ -198,6 +253,7 @@ public class Encrypt extends JFrame {
         else
         {
             try {
+                byte[] contain=EncryptMode?textAreaWest.getText().getBytes():textAreaEast.getText().getBytes();
                 SecureRandom random = new SecureRandom();
                 DESKeySpec desKey = new DESKeySpec(key.getBytes());
                 SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("DES");
@@ -205,13 +261,13 @@ public class Encrypt extends JFrame {
                 Cipher cipher = Cipher.getInstance("DES");
                 cipher.init(EncryptMode?Cipher.ENCRYPT_MODE:Cipher.DECRYPT_MODE, securekey, random);
                 if(EncryptMode) {
-                    byte[] Temp = cipher.doFinal(textAreaWest.getText().getBytes());
+                    byte[] Temp = cipher.doFinal(contain);
                     textAreaEast.setText(byte2Hex(Temp));
                 }
                 else {
-                    byte[] Temp=hex2Byte(textAreaWest.getText());
+                    byte[] Temp=hex2Byte(textAreaEast.getText());
                     if(Temp!=null)
-                        textAreaEast.setText(new String(cipher.doFinal(Temp)));
+                        textAreaWest.setText(new String(cipher.doFinal(Temp)));
                 }
             } catch (Exception exception) {
                 JOptionPane.showMessageDialog(Encrypt.this, "解密失敗");
@@ -225,9 +281,14 @@ public class Encrypt extends JFrame {
             int key=Integer.parseInt(new String(pw.getPassword()));
             if(key>=26||key<=-26)
                 key%=26;
-            if(!EncryptMode)
+            StringBuilder content;
+            if(!EncryptMode) {
                 key=-key;
-            StringBuilder content =new StringBuilder(textAreaWest.getText());
+                content=new StringBuilder(textAreaEast.getText());
+            }
+            else {
+                content=new StringBuilder(textAreaWest.getText());
+            }
             for(int c=0;c<content.length();c++) {
                 char t=content.charAt(c);
                 if(Character.isLetter(t)&&t<=126) {
@@ -236,7 +297,10 @@ public class Encrypt extends JFrame {
                     content.setCharAt(c,(char)(temp+(t<='Z'?'A':'a')));
                 }
             }
-            textAreaEast.setText(content.toString());
+            if(EncryptMode)
+                textAreaEast.setText(content.toString());
+            else
+                textAreaWest.setText(content.toString());
         }
         catch (Exception e)
         {
