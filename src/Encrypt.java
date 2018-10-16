@@ -4,14 +4,12 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 
@@ -30,6 +28,9 @@ public class Encrypt extends JFrame {
     private JMenuItem save;
     private JMenuItem open;
     private JMenuItem exit;
+    //private File path=new File(System.getProperty("user.home") + "/Desktop");
+    private File path=new File("D:\\作業\\作業\\視窗");
+    private byte[] buffer;
 
     public static void main(String[] args) {
         Encrypt encrypt=new Encrypt();
@@ -189,27 +190,46 @@ public class Encrypt extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser =new JFileChooser();
+                fileChooser.setCurrentDirectory(path);
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("txt", "txt");
+                fileChooser.setFileFilter(filter);
                 if(fileChooser.showOpenDialog(Encrypt.this)==JFileChooser.APPROVE_OPTION) {
                     try {
-                        FileReader fileReader=new FileReader(fileChooser.getSelectedFile());
-                        BufferedReader br = new BufferedReader(fileReader);
-                        ArrayList<String> List = new ArrayList<String>();
-                        String line;//br.readLine()讀取txt的每一行資料,讀到的資料存到line
-                        while((line=br.readLine())!=null) {
-                            textAreaWest.append(line);
-                            List.add(line);
+                        path = fileChooser.getSelectedFile();
+                        InputStreamReader inputStreamReader=new InputStreamReader(new FileInputStream(fileChooser.getSelectedFile()),"Big5");
+                        File file=fileChooser.getSelectedFile();
+                        long fileSize = file.length();
+                        if (fileSize > Integer.MAX_VALUE) {
+                            JOptionPane.showMessageDialog(Encrypt.this, "檔案過大");
                         }
-                        fileReader.close();
+                        else {
+                            FileInputStream fileInputStream = new FileInputStream(file);
+                            buffer = new byte[(int) fileSize];
+                            BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                            bufferedInputStream.read(buffer);
+                            //textAreaWest.setText(new String(buffer,"GB2312"));
+                            //textAreaWest.setText(new String(buffer,"UTF-16"));
+                            textAreaWest.setText(new String(buffer,Encode(buffer)));
+
+                            fileInputStream.close();
+                        }
+//                        BufferedReader br = new BufferedReader(inputStreamReader);
+//                        String line;
+//                        textAreaWest.setText("");
+//                        textAreaWest.append(br.readLine());
+//                        while((line=br.readLine())!=null) {
+//                            textAreaWest.append("\r\n"+line);
+//                        }
+                        inputStreamReader.close();
                     } catch (FileNotFoundException e1) {
-                        e1.printStackTrace();
+                        JOptionPane.showMessageDialog(Encrypt.this, "檔案不存在");
+                        //e1.printStackTrace();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
                 }
-
             }
         });
-
     }
 
     private String byte2Hex(byte[] arg_bteArray) {
@@ -306,6 +326,19 @@ public class Encrypt extends JFrame {
         {
             JOptionPane.showMessageDialog(Encrypt.this, "Caesar密碼系統金鑰為0~25之整數");
         }
+    }
+
+    private String Encode(byte[] a){
+        if(a[0]==(byte)0xEF&&a[1]==(byte)0xBB&&a[2]==(byte)0xBF)
+            return "UTF-8";
+        else if(a[0]==(byte)0xFE&&a[1]==(byte)0xFF)
+            return "UTF-16";
+        else if(a[0]==(byte)0xFF&&a[1]==(byte)0xFE)
+            return "UTF-16";
+        else
+            return "Big5";
+
+
     }
 
 }
