@@ -28,8 +28,8 @@ public class Encrypt extends JFrame {
     private JMenuItem save;
     private JMenuItem open;
     private JMenuItem exit;
-    //private File path=new File(System.getProperty("user.home") + "/Desktop");
-    private File path=new File("D:\\作業\\作業\\視窗");
+    private File path=new File(System.getProperty("user.home") + "/Desktop");
+    //private File path=new File("D:\\作業\\作業\\視窗");
     private byte[] buffer;
 
     public static void main(String[] args) {
@@ -163,7 +163,7 @@ public class Encrypt extends JFrame {
                             System.out.println("Unfinished");
                             break;
                         case 2:
-                            System.out.println("Unfinished");
+                            XOR();
                             break;
                         case 3:
                             Caesar();
@@ -230,6 +230,40 @@ public class Encrypt extends JFrame {
                 }
             }
         });
+
+        save.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JFileChooser fileChooser =new JFileChooser();
+                fileChooser.setCurrentDirectory(path);
+                FileNameExtensionFilter filter = new FileNameExtensionFilter("txt", "txt");
+                fileChooser.setFileFilter(filter);
+                if(fileChooser.showSaveDialog(Encrypt.this)==JFileChooser.APPROVE_OPTION) {
+                    try {
+                        if(textAreaEast.getText().length()>0) {
+                            FileWriter fileWriter= new FileWriter(fileChooser.getSelectedFile());
+                            BufferedWriter bufferedWriter=new BufferedWriter(fileWriter);
+                            bufferedWriter.write(textAreaEast.getText());
+                            bufferedWriter.flush();
+                            bufferedWriter.close();
+//                            fileWriter.write(textAreaEast.getText());
+//                            fileWriter.flush();
+                            fileWriter.close();
+                        }
+                        else {
+                            System.out.println("空的");
+                        }
+                    } catch (FileNotFoundException e1) {
+                        JOptionPane.showMessageDialog(Encrypt.this, "檔案不存在");
+                        //e1.printStackTrace();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+
+
     }
 
     private String byte2Hex(byte[] arg_bteArray) {
@@ -296,6 +330,24 @@ public class Encrypt extends JFrame {
         }
     }
 
+    private void XOR() {
+        String key=new String(pw.getPassword());
+        char[] chars =EncryptMode?textAreaWest.getText().toCharArray():textAreaEast.getText().toCharArray();
+        for(int c=0;c<chars.length;c++)
+            chars[c]=(char)(key.charAt(c%key.length())^chars[c]);
+//        byte[] chars =EncryptMode?textAreaWest.getText().getBytes():hex2Byte(textAreaEast.getText());
+//        byte[] keys =key.getBytes();
+//        for(int c=0;c<chars.length;c++) {
+//            chars[c]=(byte)(keys[c%keys.length]^chars[c]);
+//        }
+//        if(EncryptMode)
+//            textAreaEast.setText(byte2Hex(chars));
+        if(EncryptMode)
+            textAreaEast.setText(new String(chars));
+        else
+            textAreaWest.setText(new String(chars));
+    }
+
     private void Caesar(){
         try{
             int key=Integer.parseInt(new String(pw.getPassword()));
@@ -337,8 +389,6 @@ public class Encrypt extends JFrame {
             return "UTF-16";
         else
             return "Big5";
-
-
     }
 
 }

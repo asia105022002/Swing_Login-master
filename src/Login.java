@@ -26,7 +26,9 @@ public class Login extends JFrame {
 
     private  void init(){
         this.setTitle("Login");
-        this.setBounds(400,100,300,120);
+        //this.setBounds(400,100,300,120);
+        this.setSize(300,120);
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         Container c1 = this.getContentPane();
         c1.setLayout(new BorderLayout(3,3));
