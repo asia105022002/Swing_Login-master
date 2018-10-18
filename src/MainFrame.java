@@ -13,7 +13,8 @@ public class MainFrame extends JFrame {
     JMenuItem save=new JMenuItem("Save");
     JMenuItem exit=new JMenuItem("Exit");
     JMenuItem gogame=new JMenuItem("井字遊戲");
-    JMenuItem Encrypt=new JMenuItem("加密工具");
+    JMenuItem encrypt =new JMenuItem("加密工具");
+    JMenuItem encryptFile=new JMenuItem("檔案加密");
 
 
     public static void main(String[] args) {
@@ -38,8 +39,8 @@ public class MainFrame extends JFrame {
         file.add(save);
         file.add(exit);
         game.add(gogame);
-        tools.add(Encrypt);
-
+        tools.add(encrypt);
+        tools.add(encryptFile);
 
         exit.addActionListener(new ActionListener() {
             @Override
@@ -57,11 +58,20 @@ public class MainFrame extends JFrame {
             }
         });
 
-        Encrypt.addActionListener(new AbstractAction() {
+        encrypt.addActionListener(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 Encrypt encrypt=new Encrypt(MainFrame.this);
                 encrypt.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        encryptFile.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                EncryptFile encryptFile=new EncryptFile(MainFrame.this);
+                encryptFile.setVisible(true);
                 setVisible(false);
             }
         });

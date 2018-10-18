@@ -101,7 +101,7 @@ public class Encrypt extends JFrame {
         CenterLayout.add(LPassword);
         pw = new JPasswordField();
         CenterLayout.add(pw);
-        JRadioButton rdbtnencrypt = new JRadioButton("Encrypt",true);
+        JRadioButton rdbtnencrypt = new JRadioButton("encrypt",true);
         rdbtnencrypt.setActionCommand("encrypt");
         CenterLayout.add(rdbtnencrypt);
         JRadioButton rdbtnDecrypt = new JRadioButton("Decrypt");
@@ -196,7 +196,6 @@ public class Encrypt extends JFrame {
                 if(fileChooser.showOpenDialog(Encrypt.this)==JFileChooser.APPROVE_OPTION) {
                     try {
                         path = fileChooser.getSelectedFile();
-                        InputStreamReader inputStreamReader=new InputStreamReader(new FileInputStream(fileChooser.getSelectedFile()),"Big5");
                         File file=fileChooser.getSelectedFile();
                         long fileSize = file.length();
                         if (fileSize > Integer.MAX_VALUE) {
@@ -210,17 +209,8 @@ public class Encrypt extends JFrame {
                             //textAreaWest.setText(new String(buffer,"GB2312"));
                             //textAreaWest.setText(new String(buffer,"UTF-16"));
                             textAreaWest.setText(new String(buffer,Encode(buffer)));
-
                             fileInputStream.close();
                         }
-//                        BufferedReader br = new BufferedReader(inputStreamReader);
-//                        String line;
-//                        textAreaWest.setText("");
-//                        textAreaWest.append(br.readLine());
-//                        while((line=br.readLine())!=null) {
-//                            textAreaWest.append("\r\n"+line);
-//                        }
-                        inputStreamReader.close();
                     } catch (FileNotFoundException e1) {
                         JOptionPane.showMessageDialog(Encrypt.this, "檔案不存在");
                         //e1.printStackTrace();
