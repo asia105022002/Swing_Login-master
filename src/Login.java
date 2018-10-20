@@ -30,6 +30,7 @@ public class Login extends JFrame {
         this.setSize(300,120);
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        setResizable(false);
         Container c1 = this.getContentPane();
         c1.setLayout(new BorderLayout(3,3));
         c1.add(P1,BorderLayout.NORTH);

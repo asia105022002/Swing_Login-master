@@ -31,7 +31,8 @@ public class GoGame extends JFrame {
 
     private void init(){
         this.setTitle("井字遊戲");
-        this.setBounds(100,100,400,300);
+        this.setSize(400,300);
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         this.addWindowListener(new WindowAdapter() {
             @Override

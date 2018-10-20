@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -28,7 +29,10 @@ public class MainFrame extends JFrame {
 
     private void init() {
         this.setTitle("Main");
-        this.setBounds(400, 100, 300, 300);
+        //this.setBounds(400, 100, 300, 300);
+        this.setSize(300, 300);
+        this.setMinimumSize(new Dimension(300,300));
+        this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         this.setJMenuBar(manubar);
         manubar.add(file);

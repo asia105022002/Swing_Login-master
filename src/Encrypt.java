@@ -48,8 +48,8 @@ public class Encrypt extends JFrame {
 
     private void init() {
         this.setTitle("加密");
-        this.setBounds(100, 100, 800, 600);
-
+        this.setSize( 800, 600);
+        this.setLocationRelativeTo(null);
         JMenuBar menuBar=new JMenuBar();
         this.setJMenuBar(menuBar);
         JMenu file=new JMenu("File");

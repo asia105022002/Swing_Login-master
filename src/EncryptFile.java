@@ -27,8 +27,6 @@ public class EncryptFile extends JFrame{
     public static void main(String[] args) {
         EncryptFile encryptFile=new EncryptFile();
         encryptFile.setVisible(true);
-
-
     }
 
     public EncryptFile(MainFrame Main){
@@ -38,7 +36,6 @@ public class EncryptFile extends JFrame{
 
     public EncryptFile() {
         init();
-
     }
 
     private void initListener() {
@@ -68,7 +65,7 @@ public class EncryptFile extends JFrame{
                         inputPathField.setText(path);
                         //if(outputPathField.getText().equals("")) {
                         outputPathField.setText(path.substring(0,path.lastIndexOf("."))+"_cypher"+path.substring(path.lastIndexOf(".")));
-                         outputPath=new File(outputPathField.getText());
+                        outputPath=new File(outputPathField.getText());
                     } catch (FileNotFoundException e1) {
                         JOptionPane.showMessageDialog(EncryptFile.this, "檔案不存在");
                         inputPath = fileChooser.getSelectedFile().getParentFile();
@@ -80,7 +77,10 @@ public class EncryptFile extends JFrame{
             @Override
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser=new JFileChooser();
-                fileChooser.setCurrentDirectory(outputPath.getParentFile());
+                if(outputPathField.getText().length()==0)
+                    fileChooser.setCurrentDirectory(outputPath);
+                else
+                    fileChooser.setCurrentDirectory(new File(outputPathField.getText()).getParentFile());
                 //做不到帶不存在的檔案
                if(fileChooser.showSaveDialog(EncryptFile.this)==JFileChooser.APPROVE_OPTION) {
                    outputPath=fileChooser.getSelectedFile();
