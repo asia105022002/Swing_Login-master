@@ -243,9 +243,6 @@ public class Encrypt extends JFrame {
                         else {
                             System.out.println("空的");
                         }
-                    } catch (FileNotFoundException e1) {
-                        JOptionPane.showMessageDialog(Encrypt.this, "檔案不存在");
-                        //e1.printStackTrace();
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
