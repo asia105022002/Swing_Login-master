@@ -5,7 +5,7 @@ import java.awt.event.ActionListener;
 
 public class MainFrame extends JFrame {
 
-    JMenuBar manubar=new JMenuBar();
+    JMenuBar menuBar =new JMenuBar();
     JMenu file=new JMenu("File");
     JMenu tools=new JMenu("Tools");
     JMenu game=new JMenu("Game");
@@ -16,7 +16,7 @@ public class MainFrame extends JFrame {
     JMenuItem gogame=new JMenuItem("井字遊戲");
     JMenuItem encrypt =new JMenuItem("加密工具");
     JMenuItem encryptFile=new JMenuItem("檔案加密");
-
+    JMenuItem clock=new JMenuItem("計時器");
 
     public static void main(String[] args) {
         MainFrame mainframe=new MainFrame();
@@ -34,17 +34,18 @@ public class MainFrame extends JFrame {
         this.setMinimumSize(new Dimension(300,300));
         this.setLocationRelativeTo(null);
         this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        this.setJMenuBar(manubar);
-        manubar.add(file);
-        manubar.add(tools);
-        manubar.add(game);
-        manubar.add(help);
+        this.setJMenuBar(menuBar);
+        menuBar.add(file);
+        menuBar.add(tools);
+        menuBar.add(game);
+        menuBar.add(help);
         file.add(open);
         file.add(save);
         file.add(exit);
         game.add(gogame);
         tools.add(encrypt);
         tools.add(encryptFile);
+        tools.add(clock);
 
         exit.addActionListener(new ActionListener() {
             @Override
@@ -76,6 +77,15 @@ public class MainFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 EncryptFile encryptFile=new EncryptFile(MainFrame.this);
                 encryptFile.setVisible(true);
+                setVisible(false);
+            }
+        });
+
+        clock.addActionListener(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Clock clock=new Clock(MainFrame.this);
+                clock.setVisible(true);
                 setVisible(false);
             }
         });

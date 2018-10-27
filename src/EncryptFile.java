@@ -1,3 +1,5 @@
+import javafx.scene.control.RadioButton;
+
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -16,12 +18,16 @@ public class EncryptFile extends JFrame{
     private JButton runButton;
     private JButton exitButton;
     private JTextField keyField;
-    private JComboBox comboBox1;
+    private JComboBox comboBox;
     private JTextField outputPathField;
-    private File inputPath =new File(System.getProperty("user.home") + "/Desktop");
+    private JRadioButton 加密RadioButton;
+    private JRadioButton 解密RadioButton;
+    //private File inputPath =new File(System.getProperty("user.home") + "/Desktop");
+    private File inputPath =new File("D:\\作業\\視窗");
     private File outputPath=new File(System.getProperty("user.home") + "/Desktop");
     private  byte[] bytes;
     private FileInputStream fileInputStream;
+    private ButtonGroup buttonGroup;
 
 
     public static void main(String[] args) {
@@ -89,11 +95,68 @@ public class EncryptFile extends JFrame{
                 }
             }
         });
+
+        runButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(inputPathField.getText().length()==0)
+                    JOptionPane.showMessageDialog(EncryptFile.this, "請選擇檔案");
+                else if(outputPathField.getText().length()==0)
+                    JOptionPane.showMessageDialog(EncryptFile.this, "請選擇存檔路徑");
+                else if(keyField.getText().length()==0)
+                    JOptionPane.showMessageDialog(EncryptFile.this, "請輸入金鑰");
+                else {
+                    try {
+                        String key=keyField.getText();
+                        //boolean encryptMode=buttonGroup.getSelection().getActionCommand().equals("encrypt");
+                        boolean encryptMode=加密RadioButton.isSelected();
+                        int encryptionType =comboBox.getSelectedIndex();
+
+                        File file = new File(inputPathField.getText());
+                        long fileSize = file.length();
+                        FileInputStream fileInputStream = new FileInputStream(file);
+                        byte[] buffer = new byte[(int) fileSize];
+                        BufferedInputStream bufferedInputStream = new BufferedInputStream(fileInputStream);
+                        bufferedInputStream.read(buffer);
+                        bufferedInputStream.close();
+                        fileInputStream.close();
+
+                        switch(encryptionType) {
+                            case 0:
+                                buffer=EncryptMathod.DES(buffer,key,encryptMode);
+                                break;
+                            case 1:
+                                EncryptMathod.XOR(buffer,key);
+                                break;
+                            case 2:
+                                EncryptMathod.Caesar(buffer,Integer.parseInt(key),encryptMode);
+                                break;
+                        }
+                        //buffer= EncryptMathod.XOR(buffer,keyField.getText());
+
+                        FileOutputStream fileOutputStream=new FileOutputStream(outputPathField.getText());
+                        BufferedOutputStream bufferedOutputStream=new BufferedOutputStream(fileOutputStream);
+                        bufferedOutputStream.write(buffer);
+                        bufferedOutputStream.flush();
+                        bufferedOutputStream.close();
+                        fileOutputStream.close();
+                        JOptionPane.showMessageDialog(EncryptFile.this, "Done");
+
+                    } catch (FileNotFoundException e1) {
+                        JOptionPane.showMessageDialog(EncryptFile.this, "檔案不存在");
+                    }catch (Exception e1) {
+                        JOptionPane.showMessageDialog(EncryptFile.this, e1);
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        });
+
     }
 
     private void init() {
         setTitle("檔案加密");
-        setSize(568,155);
+        setSize(682,155);
         setContentPane(panel1);
         setLocationRelativeTo(null);
         this.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -106,6 +169,9 @@ public class EncryptFile extends JFrame{
                     System.exit(0);
             }
         });
+        buttonGroup=new ButtonGroup();
+        buttonGroup.add(加密RadioButton);
+        buttonGroup.add(解密RadioButton);
         initListener();
     }
 
